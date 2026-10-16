@@ -46,7 +46,8 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - terra
-    - helm = 1.0.0
+    - helm
+    - linear
 
 tests:
   terra-test:

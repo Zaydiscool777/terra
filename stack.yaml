@@ -31,6 +31,7 @@ snapshot:
 #   - wai
 packages:
 - .
+- ./helm-1.0.0
 # Dependency packages to be pulled from upstream that are not in the snapshot.
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
@@ -40,10 +41,14 @@ packages:
 # - git: https://github.com/commercialhaskell/stack.git
 #   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
 #
-# extra-deps: []
+extra-deps:
+- linear-1.23.3
 
 # Override default flag values for project packages and extra-deps
 # flags: {}
+
+ghc-options:
+  terra: "-Wno-unused-imports"
 
 # Extra package databases containing global packages
 # extra-package-dbs: []
@@ -65,3 +70,7 @@ packages:
 #
 # Allow a newer minor version of GHC than the snapshot specifies
 # compiler-check: newer-minor
+
+allow-newer: true
+allow-newer-deps:
+- helm
