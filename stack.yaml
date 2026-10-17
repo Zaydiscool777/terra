@@ -47,9 +47,6 @@ extra-deps:
 # Override default flag values for project packages and extra-deps
 # flags: {}
 
-ghc-options:
-  terra: "-Wno-unused-imports"
-
 # Extra package databases containing global packages
 # extra-package-dbs: []
 

@@ -20,23 +20,24 @@ import qualified Helm.Mouse as H.Mouse
 import qualified Helm.Sub as H.Sub
 import qualified Helm.Time as H.Time
 import qualified Helm.Window as H.Win
+
 import Linear
 
-type Model = () -- game model
-type Action = () -- game action/state?
+data Model = Model {displaySize :: V2 Double} -- data model
+data Action = WindowSizeChanged (V2 Int) -- sum of actions
 
 main :: IO ()
 main = do
-  sdl <- SDL.startupWith (SDL.defaultConfig {SDL.windowDimensions = pure 500})
-  run sdl (H.Eng.GameConfig _init (upd sdl) (subs sdl) view)
--- a is action
-_init :: (Model, Cmd SDL.SDLEngine Action)
-_init = ((), H.Cmd.none)
-upd :: SDL.SDLEngine -> Model -> Action -> (Model, Cmd SDL.SDLEngine Action)
-upd _ _ _ = ((), H.Cmd.none)
-subs :: SDL.SDLEngine -> H.Sub.Sub SDL.SDLEngine Action
-subs _ = H.Sub.none
+  sdl <- SDL.startupWith (SDL.defaultConfig {SDL.windowDimensions = pure 625})
+  run sdl (H.Eng.GameConfig init' upd subs view)
+init' :: (Model, Cmd SDL.SDLEngine Action)
+init' = (Model (pure 625), H.Win.size WindowSizeChanged)
+upd :: Model -> Action -> (Model, Cmd SDL.SDLEngine Action)
+upd _ a = case a of
+  WindowSizeChanged size -> (Model (fromIntegral <$> size), H.Cmd.none)
+subs :: H.Sub.Sub SDL.SDLEngine Action
+subs = H.Win.resizes WindowSizeChanged
 view :: Model -> Graphics SDL.SDLEngine
-view _ = H.Gs.Graphics2D (G2D.collage
-  [G2D.filled (H.Color.rgb 1 1 1) (G2D.rect (pure 1250)),
-  G2D.move (V2 150 50) (G2D.text (G2D.Text.showText "IO goes here"))])
+view m = H.Gs.Graphics2D $ G2D.collage
+  [G2D.filled (H.Color.rgb 1 1 1) $ G2D.rect $ displaySize m * 2,
+  G2D.move (displaySize m - V2 100 20) $ G2D.text $ G2D.Text.showText $ displaySize m]
