@@ -30,7 +30,7 @@ data Game e m a = Game
   }
 
 -- | Prepare the game state from an engine and some game configuration.
-prepare :: Engine e => e -> GameConfig e m a -> IO (Game e m a)
+prepare :: e -> GameConfig e m a -> IO (Game e m a)
 prepare engine config = do
   {- The call to 'embed' here is a little bit hacky, but seems necessary
      to get this working. This is because 'start' actually computes the signal
@@ -89,7 +89,7 @@ step engine game = do
     Game { actionSmp, gameModel, gameConfig = GameConfig { viewFn } } = game
 
 -- | Step the game model forward with a specific game action.
-stepModel :: Engine e => e -> Game e m a -> m -> a -> IO m
+stepModel :: e -> Game e m a -> m -> a -> IO m
 stepModel engine game model action =
   evalStateT monad engine >>= foldM (stepModel engine game) upModel
 

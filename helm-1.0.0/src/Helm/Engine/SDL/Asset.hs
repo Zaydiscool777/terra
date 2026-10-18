@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -Wno-orphans #-}
 -- | Contains the SDL asset types.
 module Helm.Engine.SDL.Asset
   (
